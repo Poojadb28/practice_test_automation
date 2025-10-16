@@ -1,13 +1,15 @@
-name: Selenium Python Tests
+name: Selenium Tests
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,15 +24,15 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install -r requirements.txt
           pip install pytest pytest-html selenium webdriver-manager
 
-
-      - name: Run Selenium tests
+      - name: Run Selenium tests with Pytest
         run: |
-          pytest --html=reports/report.html --self-contained-html
+          pytest tests/ --html=report.html --self-contained-html -v
 
-      - name: Upload HTML test report
+      - name: Upload HTML report as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Selenium_Test_Report
-          path: reports/report.html
+          name: selenium-test-report
+          path: report.html
